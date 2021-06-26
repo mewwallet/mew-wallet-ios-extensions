@@ -13,6 +13,6 @@ extension Bool: HexProtocol {
   }
   
   public init(hex: String) {
-    self = (hex != "0x00")
+    self = (hex.stringRemoveHexPrefix() != "00")
   }
 }
