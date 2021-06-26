@@ -8,7 +8,11 @@
 import Foundation
 
 extension Decimal: KeyedDecodableWrappedProtocol {
-  public init?(wrapped: String) {
-    self.init(string: wrapped)
+  public init?(wrapped: String, hex: Bool) {
+    if hex {
+      self.init(strictHex: wrapped)
+    } else {
+      self.init(string: wrapped)
+    }
   }
 }
