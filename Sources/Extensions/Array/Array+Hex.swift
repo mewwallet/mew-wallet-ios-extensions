@@ -62,7 +62,7 @@ extension Array: HexProtocol where Element == UInt8 {
     self[self.startIndex ..< self.endIndex]
   }
   
-  init(reserveCapacity: Int) {
+  private init(reserveCapacity: Int) {
     self = Array<Element>()
     self.reserveCapacity(reserveCapacity)
   }
