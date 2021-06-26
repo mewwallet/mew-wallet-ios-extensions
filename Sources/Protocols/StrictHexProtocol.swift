@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol KeyedDecodableWrappedProtocol {
-  init?(wrapped: String, hex: Bool)
+public protocol StrictHexProtocol: HexProtocol {
+  init?(strictHex: String)
 }

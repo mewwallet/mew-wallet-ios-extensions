@@ -55,15 +55,4 @@ extension Array: HexProtocol where Element == UInt8 {
       append(b)
     }
   }
-  
-  // MARK: - Private
-  
-  private var slice: ArraySlice<Element> {
-    self[self.startIndex ..< self.endIndex]
-  }
-  
-  private init(reserveCapacity: Int) {
-    self = Array<Element>()
-    self.reserveCapacity(reserveCapacity)
-  }
 }

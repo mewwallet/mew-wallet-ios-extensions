@@ -8,21 +8,20 @@
 import Foundation
 
 public extension KeyedDecodingContainerProtocol {
-  func decode<T:KeyedDecodableWrappedProtocol>(wrappedType: String.Type, forKey key: Self.Key) throws -> T {
-    let wrapped = try self.decode(wrappedType, forKey: key)
-    guard let value = T(wrapped: wrapped) else {
+  func decodeWrapped<T:KeyedDecodableWrappedProtocol>(_ unwrap: String.Type, forKey key: Self.Key, decodeHex: Bool = false) throws -> T {
+    let wrapped = try self.decode(unwrap, forKey: key)
+    let value = T(wrapped: wrapped, hex: decodeHex)
+    
+    guard value != nil else {
       throw DecodingError.dataCorruptedError(forKey: key, in: self, debugDescription: "Value: \(wrapped)")
     }
-    return value
+    return value!
   }
   
-  func decodeIfPresent<T:KeyedDecodableWrappedProtocol>(wrappedType: String.Type, forKey key: Self.Key) throws -> T? {
-    guard let wrapped = try self.decodeIfPresent(wrappedType, forKey: key) else {
+  func decodeWrappedIfPresent<T:KeyedDecodableWrappedProtocol>(_ unwrap: String.Type, forKey key: Self.Key, decodeHex: Bool = false) throws -> T? {
+    guard let wrapped = try self.decodeIfPresent(unwrap, forKey: key) else {
       return nil
     }
-    guard let value = T(wrapped: wrapped) else {
-      throw DecodingError.dataCorruptedError(forKey: key, in: self, debugDescription: "Value: \(wrapped)")
-    }
-    return value
+    return T(wrapped: wrapped, hex: decodeHex)
   }
 }
