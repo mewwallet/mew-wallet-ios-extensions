@@ -20,6 +20,9 @@ public extension KeyedEncodingContainer {
       formatter.locale = Locale(identifier: "en_US_POSIX")
       let string = formatter.string(from: value as! NSNumber)!
       try self.encode(string, forKey: key)
+    case (is URL.Type, is String.Type):
+      let url = value as! URL
+      try self.encode(url.absoluteString, forKey: key)
     default:
       throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [key], debugDescription: "Encoding of wrapped type is not supported yet: \(T.self)"))
     }
@@ -42,6 +45,9 @@ public extension KeyedEncodingContainer {
         throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [key], debugDescription: "Can't convert value"))
       }
       try self.encodeIfPresent(string, forKey: key)
+    case (is URL.Type, is String.Type):
+      let url = value as! URL
+      try self.encodeIfPresent(url.absoluteString, forKey: key)
     default:
       throw EncodingError.invalidValue(self, EncodingError.Context(codingPath: [key], debugDescription: "Encoding of wrapped type is not supported yet: \(T.self)"))
     }
