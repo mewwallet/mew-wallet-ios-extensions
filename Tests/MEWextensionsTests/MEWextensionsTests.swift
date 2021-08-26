@@ -74,4 +74,40 @@ final class MEWextensionsTests: XCTestCase {
       XCTFail(error.localizedDescription)
     }
   }
+  
+  func test_URL_KeyedDecodableWrappedProtocol() {
+    enum CodingKeys: CodingKey {
+      case url
+    }
+    
+    struct TestStruct: Codable {
+      let url: URL
+      
+      init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+        url = try container.decodeWrapped(String.self, forKey: .url)
+      }
+      
+      func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(self.url, forKey: .url, wrapIn: String.self)
+      }
+    }
+    
+    let data = #"{"url":"https:\/\/www.google.com\/search?q=let+me+google+that+for+you&client=safari"}"#.data(using: .utf8)!
+    
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
+    do {
+      let result = try decoder.decode(TestStruct.self, from: data)
+      XCTAssertEqual(result.url, URL(string: "https://www.google.com/search?q=let+me+google+that+for+you&client=safari"))
+      
+      let encodedData = try encoder.encode(result)
+      XCTAssertEqual(data, encodedData)
+    } catch {
+      XCTFail(error.localizedDescription)
+    }
+  }
 }
