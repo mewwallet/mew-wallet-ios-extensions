@@ -75,6 +75,32 @@ final class MEWextensionsTests: XCTestCase {
     }
   }
   
+  func testDecodeHex0x() {
+    enum CodingKeys: CodingKey {
+      case value
+    }
+    
+    struct TestStruct: Decodable {
+      let value: Decimal
+      
+      init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+        value = try container.decodeWrapped(String.self, forKey: .value, decodeHex: true)
+      }
+    }
+    
+    let data = #"{"value":"0x"}"#.data(using: .utf8)!
+    
+    let decoder = JSONDecoder()
+    do {
+      let result = try decoder.decode(TestStruct.self, from: data)
+      XCTAssertEqual(result.value, .zero)
+    } catch {
+      XCTFail(error.localizedDescription)
+    }
+  }
+  
   func test_URL_KeyedDecodableWrappedProtocol() {
     enum CodingKeys: CodingKey {
       case url

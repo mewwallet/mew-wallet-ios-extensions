@@ -12,7 +12,8 @@ extension Decimal: StrictHexProtocol {
     var value = Decimal()
     let hexValue = hex.stringRemoveHexPrefix()
     guard hexValue.count != 0 else {
-      return nil
+      self = .zero
+      return
     }
     var position = hexValue.startIndex
     while position != hexValue.endIndex {
