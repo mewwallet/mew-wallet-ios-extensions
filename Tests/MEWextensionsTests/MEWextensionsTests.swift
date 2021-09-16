@@ -78,24 +78,28 @@ final class MEWextensionsTests: XCTestCase {
   func testDecodeHex0x() {
     enum CodingKeys: CodingKey {
       case value
+      case data
     }
     
     struct TestStruct: Decodable {
       let value: Decimal
+      let data: Data
       
       init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
             
         value = try container.decodeWrapped(String.self, forKey: .value, decodeHex: true)
+        data = try container.decodeWrapped(String.self, forKey: .data, decodeHex: true)
       }
     }
     
-    let data = #"{"value":"0x"}"#.data(using: .utf8)!
+    let data = #"{"value":"0x", "data":"0x"}"#.data(using: .utf8)!
     
     let decoder = JSONDecoder()
     do {
       let result = try decoder.decode(TestStruct.self, from: data)
       XCTAssertEqual(result.value, .zero)
+      XCTAssertEqual(result.data, Data())
     } catch {
       XCTFail(error.localizedDescription)
     }
