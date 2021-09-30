@@ -8,6 +8,7 @@
 import Foundation
 
 extension Decimal: HexProtocol {
+  
   public var hexString: String {
     return self.representationOf(base: Decimal(16)).stringAddHexPrefix()
   }

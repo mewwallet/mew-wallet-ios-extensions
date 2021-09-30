@@ -140,4 +140,40 @@ final class MEWextensionsTests: XCTestCase {
       XCTFail(error.localizedDescription)
     }
   }
+  
+  func test_Decimal_KeyedEncodableWrappedProtocol() {
+    enum CodingKeys: CodingKey {
+      case number
+    }
+    
+    struct TestStruct: Codable {
+      let number: Decimal
+      
+      init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        number = try container.decodeWrapped(String.self, forKey: .number)
+      }
+      
+      func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(self.number, forKey: .number, wrapIn: String.self)
+      }
+    }
+    
+    let data = #"{"number":"0.10890248496039656"}"#.data(using: .utf8)!
+    
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
+    do {
+      let result = try decoder.decode(TestStruct.self, from: data)
+      XCTAssertEqual(result.number, Decimal(string: "0.10890248496039656"))
+      XCTAssertEqual(result.number, Decimal(wrapped: "0,10890248496039656", hex: false))
+      let encodedData = try encoder.encode(result)
+      XCTAssertEqual(data, encodedData)
+    } catch {
+      XCTFail(error.localizedDescription)
+    }
+  }
 }

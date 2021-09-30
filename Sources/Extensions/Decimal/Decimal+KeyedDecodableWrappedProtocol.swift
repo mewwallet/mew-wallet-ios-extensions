@@ -12,7 +12,12 @@ extension Decimal: KeyedDecodableWrappedProtocol {
     if hex {
       self.init(strictHex: wrapped)
     } else {
-      self.init(string: wrapped)
+      var wrapped = wrapped
+      wrapped = wrapped.replacingOccurrences(of: ",", with: ".")
+      guard let value = Decimal(string: wrapped, locale: Locale(identifier: "en_US_POSIX")) else {
+        return nil
+      }
+      self = value
     }
   }
 }
