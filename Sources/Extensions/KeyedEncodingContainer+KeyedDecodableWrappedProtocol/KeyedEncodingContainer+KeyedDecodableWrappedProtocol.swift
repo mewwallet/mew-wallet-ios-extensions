@@ -15,11 +15,7 @@ public extension KeyedEncodingContainer {
     case (is Data.Type, is String.Type) where !encodeHex:
       try self.encode(value as! Data, forKey: key)
     case (is Decimal.Type, is String.Type) where !encodeHex:
-      let formatter = NumberFormatter()
-      formatter.numberStyle = .decimal
-      formatter.locale = Locale(identifier: "en_US_POSIX")
-      let string = formatter.string(from: value as! NSNumber)!
-      try self.encode(string, forKey: key)
+      try self.encode((value as! Decimal).decimalString, forKey: key)
     case (is URL.Type, is String.Type):
       let url = value as! URL
       try self.encode(url.absoluteString, forKey: key)
@@ -38,13 +34,7 @@ public extension KeyedEncodingContainer {
     case (is Data.Type, is String.Type) where encodeHex:
       try self.encodeIfPresent(value as? Data, forKey: key)
     case (is Decimal.Type, is String.Type) where !encodeHex:
-      let formatter = NumberFormatter()
-      formatter.numberStyle = .decimal
-      formatter.locale = Locale(identifier: "en_US_POSIX")
-      guard let string = formatter.string(from: value as! NSNumber) else {
-        throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [key], debugDescription: "Can't convert value"))
-      }
-      try self.encodeIfPresent(string, forKey: key)
+      try self.encodeIfPresent((value as! Decimal).decimalString, forKey: key)
     case (is URL.Type, is String.Type):
       let url = value as! URL
       try self.encodeIfPresent(url.absoluteString, forKey: key)
