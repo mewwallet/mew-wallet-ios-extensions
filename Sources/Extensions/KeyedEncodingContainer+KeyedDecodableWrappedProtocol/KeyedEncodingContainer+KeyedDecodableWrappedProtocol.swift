@@ -16,9 +16,11 @@ public extension KeyedEncodingContainer {
       try self.encode(value as! Data, forKey: key)
     case (is Decimal.Type, is String.Type) where !encodeHex:
       try self.encode((value as! Decimal).decimalString, forKey: key)
-    case (is URL.Type, is String.Type):
+    case (is URL.Type, is String.Type) where !encodeHex:
       let url = value as! URL
       try self.encode(url.absoluteString, forKey: key)
+    case (is Date.Type, is String.Type) where !encodeHex:
+      try self.encode((value as! Date).decimalString, forKey: key)
     default:
       throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [key], debugDescription: "Encoding of wrapped type is not supported yet: \(T.self)"))
     }
@@ -38,6 +40,8 @@ public extension KeyedEncodingContainer {
     case (is URL.Type, is String.Type):
       let url = value as! URL
       try self.encodeIfPresent(url.absoluteString, forKey: key)
+    case (is Date.Type, is String.Type) where !encodeHex:
+      try self.encodeIfPresent((value as! Date).decimalString, forKey: key)
     default:
       throw EncodingError.invalidValue(self, EncodingError.Context(codingPath: [key], debugDescription: "Encoding of wrapped type is not supported yet: \(T.self)"))
     }
