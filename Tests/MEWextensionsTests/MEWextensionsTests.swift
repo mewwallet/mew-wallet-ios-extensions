@@ -176,4 +176,39 @@ final class MEWextensionsTests: XCTestCase {
       XCTFail(error.localizedDescription)
     }
   }
+  
+  func test_Date_KeyedEncodableWrappedProtocol() {
+    enum CodingKeys: CodingKey {
+      case date
+    }
+    
+    struct TestStruct: Codable {
+      let date: Date
+      
+      init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        date = try container.decodeWrapped(String.self, forKey: .date, decodeHex: true)
+      }
+      
+      func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(self.date, forKey: .date, wrapIn: String.self, encodeHex: true)
+      }
+    }
+    
+    let data = #"{"date":"0x616f74a4"}"#.data(using: .utf8)!
+    
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
+    do {
+      let result = try decoder.decode(TestStruct.self, from: data)
+      XCTAssertEqual(result.date, Date(timeIntervalSince1970: 1634694308))
+      let encodedData = try encoder.encode(result)
+      XCTAssertEqual(data, encodedData)
+    } catch {
+      XCTFail(error.localizedDescription)
+    }
+  }
 }
