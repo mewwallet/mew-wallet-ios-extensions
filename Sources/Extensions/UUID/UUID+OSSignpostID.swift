@@ -8,6 +8,7 @@
 import Foundation
 import OSLog
 
+@available(iOS 12.0, *)
 extension UUID {
   public var signpostID: OSSignpostID {
     return OSSignpostID(self.uint64uuid)
