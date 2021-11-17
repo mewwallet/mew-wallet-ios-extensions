@@ -211,4 +211,9 @@ final class MEWextensionsTests: XCTestCase {
       XCTFail(error.localizedDescription)
     }
   }
+  
+  func test_long_decimal_to_string() {
+    let number = Decimal(string: "2491936207226846804051")
+    XCTAssertEqual(number?.decimalString, "2491936207226846804051")
+  }
 }
