@@ -41,22 +41,26 @@ extension Decimal: HexProtocol {
   
   // MARK: - Private
   
-  private func integerDivisionBy(_ operand: Decimal) -> Decimal {
+  func integerDivisionBy(_ operand: Decimal) -> Decimal {
     let result = (self / operand)
     return result.rounded(0, result < 0 ? .up : .down)
   }
 
-  private func truncatingRemainder(dividingBy operand: Decimal) -> Decimal {
+  func truncatingRemainder(dividingBy operand: Decimal) -> Decimal {
     return self - self.integerDivisionBy(operand) * operand
   }
 
-  private func representationOf(base: Decimal) -> String {
+  func representationOf(base: Decimal) -> String {
     var buffer: [Int] = []
     var number = self
 
     while number > 0 {
       buffer.append((number.truncatingRemainder(dividingBy: base) as NSDecimalNumber).intValue)
       number = number.integerDivisionBy(base)
+    }
+    
+    if buffer.isEmpty {
+      buffer.append(0)
     }
 
     return buffer
