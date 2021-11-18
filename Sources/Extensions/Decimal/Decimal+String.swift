@@ -25,7 +25,13 @@ extension Decimal {
     let integerReminder = reminder * Decimal(sign: .plus, exponent: abs(reminder.exponent), significand: Decimal(1))
     
     let integerString = integer.representationOf(base: Decimal(10))
-    let reminderString = integerReminder.representationOf(base: Decimal(10))
+    var reminderString = integerReminder.representationOf(base: Decimal(10))
+    if reminderString.count != abs(reminder.exponent), !reminder.isZero {
+      let zeroString = Decimal.zero.representationOf(base: Decimal(10))
+      let count = abs(reminder.exponent) - reminderString.count
+      let reminderPrefix = String(repeating: zeroString, count: count)
+      reminderString.insert(contentsOf: reminderPrefix, at: reminderString.startIndex)
+    }
     
     let prefix: String!
     var format: String!
