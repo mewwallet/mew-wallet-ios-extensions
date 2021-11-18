@@ -215,5 +215,9 @@ final class MEWextensionsTests: XCTestCase {
   func test_long_decimal_to_string() {
     let number = Decimal(string: "41025486375585300012.376715277309906263")
     XCTAssertEqual(number?.decimalString, "41025486375585300012.376715277309906263")
+    
+    XCTAssertEqual(number?.decimalString(locale: Locale(identifier: "ru_RU")), "41025486375585300012,376715277309906263")
+    XCTAssertEqual(number?.decimalString(locale: Locale(identifier: "ja_JP")), "41025486375585300012.376715277309906263")
+    XCTAssertEqual(number?.decimalString(locale: Locale(identifier: "ar_SA")), "41025486375585300012٫376715277309906263")
   }
 }

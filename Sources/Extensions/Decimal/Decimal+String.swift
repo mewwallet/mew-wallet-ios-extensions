@@ -9,11 +9,15 @@ import Foundation
 
 extension Decimal {
   public var decimalString: String? {
+    return self.decimalString()
+  }
+  
+  public func decimalString(locale: Locale = Locale(identifier: "en_US_POSIX")) -> String? {
     let formatter = NumberFormatter()
     formatter.numberStyle = .decimal
     formatter.maximumFractionDigits = 8
     formatter.maximumIntegerDigits = 8
-    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.locale = locale
     
     let integer = abs(self).integerDivisionBy(Decimal(1))
     
