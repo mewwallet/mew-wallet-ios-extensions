@@ -213,7 +213,7 @@ final class MEWextensionsTests: XCTestCase {
   }
   
   func test_long_decimal_to_string() {
-    let number = Decimal(string: "2491936207226846804051")
-    XCTAssertEqual(number?.decimalString, "2491936207226846804051")
+    let number = Decimal(string: "41025486375585300012.376715277309906263")
+    XCTAssertEqual(number?.decimalString, "41025486375585300012.376715277309906263")
   }
 }
