@@ -9,11 +9,15 @@ import Foundation
 
 extension Decimal {
   public var decimalString: String? {
+    return self.decimalString()
+  }
+  
+  public func decimalString(locale: Locale = Locale(identifier: "en_US_POSIX")) -> String? {
     let formatter = NumberFormatter()
     formatter.numberStyle = .decimal
     formatter.maximumFractionDigits = 8
     formatter.maximumIntegerDigits = 8
-    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.locale = locale
     
     let integer = abs(self).integerDivisionBy(Decimal(1))
     
@@ -21,7 +25,13 @@ extension Decimal {
     let integerReminder = reminder * Decimal(sign: .plus, exponent: abs(reminder.exponent), significand: Decimal(1))
     
     let integerString = integer.representationOf(base: Decimal(10))
-    let reminderString = integerReminder.representationOf(base: Decimal(10))
+    var reminderString = integerReminder.representationOf(base: Decimal(10))
+    if reminderString.count != abs(reminder.exponent), !reminder.isZero {
+      let zeroString = Decimal.zero.representationOf(base: Decimal(10))
+      let count = abs(reminder.exponent) - reminderString.count
+      let reminderPrefix = String(repeating: zeroString, count: count)
+      reminderString.insert(contentsOf: reminderPrefix, at: reminderString.startIndex)
+    }
     
     let prefix: String!
     var format: String!
