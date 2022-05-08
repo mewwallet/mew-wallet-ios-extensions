@@ -10,8 +10,8 @@ import Foundation
 extension URL {
   public var sanitized: URL? {
     guard var components = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return nil }
-    if components.path == "/" {
-      components.path = ""
+    if components.path == "" {
+      components.path = "/"
     }
     return components.url
   }
