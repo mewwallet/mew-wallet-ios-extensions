@@ -2,12 +2,11 @@
 //  File.swift
 //  
 //
-//  Created by Mitya on 5/17/22.
+//  Created by Mikhail Nikanorov on 5/17/22.
 //
 
 import WebKit
 
-// Can it live here?
 extension WKWebView {
   @MainActor
   public func safeEvaluateJavaScript(_ javaScriptString: String) async throws -> Any? {
