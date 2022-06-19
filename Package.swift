@@ -7,7 +7,7 @@ let package = Package(
   name: "mew-wallet-ios-extensions",
   platforms: [
     .iOS(.v14),
-    .macOS(.v10_15)
+    .macOS(.v11)
   ],
   products: [
     .library(
