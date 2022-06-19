@@ -1,5 +1,5 @@
 import XCTest
-@testable import MEWextensions
+@testable import mew_wallet_ios_extensions
 
 final class MEWextensionsTests: XCTestCase {
   
