@@ -17,13 +17,47 @@ public extension Logger {
   func error(error: Error) { self.error(message: error.localizedDescription) }
   func critical(error: Error) { self.critical(message: error.localizedDescription) }
   
-  func trace(message: String) { self.trace("[T]⬜️ \(message)") }
-  func debug(message: String) { self.debug("[D]🟪 \(message)") }
-  func info(message: String) { self.info("[I]🟦 \(message)") }
-  func notice(message: String) { self.notice("[N]🟩 \(message)") }
-  func warning(message: String) { self.warning("[W]🟨 \(message)") }
-  func error(message: String) { self.error("[E]🟧 \(message)") }
-  func critical(message: String) { self.critical("[C]🟥 \(message)") }
+  func trace(message: String) {
+#if DEBUG
+    self.trace("[T]⬜️ \(message)")
+#endif
+  }
+  
+  func debug(message: String) {
+#if DEBUG
+    self.debug("[D]🟪 \(message)")
+#endif
+  }
+  
+  func info(message: String) {
+#if DEBUG
+    self.info("[I]🟦 \(message)")
+#endif
+  }
+  
+  func notice(message: String) {
+#if DEBUG
+    self.notice("[N]🟩 \(message)")
+#endif
+  }
+  
+  func warning(message: String) {
+#if DEBUG
+    self.warning("[W]🟨 \(message)")
+#endif
+  }
+  
+  func error(message: String) {
+#if DEBUG
+    self.error("[E]🟧 \(message)")
+#endif
+  }
+  
+  func critical(message: String) {
+#if DEBUG
+    self.critical("[C]🟥 \(message)")
+#endif
+  }
   
   func trace(file: String, line: Int, function: String, _ error: Error) { self.trace(file: file, line: line, function: function, message: error.localizedDescription) }
   func debug(file: String, line: Int, function: String, _ error: Error) { self.debug(file: file, line: line, function: function, message: error.localizedDescription) }
@@ -33,11 +67,45 @@ public extension Logger {
   func error(file: String, line: Int, function: String, _ error: Error) { self.error(file: file, line: line, function: function, message: error.localizedDescription) }
   func critical(file: String, line: Int, function: String, _ error: Error) { self.critical(file: file, line: line, function: function, message: error.localizedDescription) }
   
-  func trace(file: String, line: Int, function: String, message: String) { self.trace("[T]⬜️ \(file):\(function):\(line) \(message)") }
-  func debug(file: String, line: Int, function: String, message: String) { self.debug("[D]🟪 \(file):\(function):\(line) \(message)") }
-  func info(file: String, line: Int, function: String, message: String) { self.info("[I]🟦 \(file):\(function):\(line) \(message)") }
-  func notice(file: String, line: Int, function: String, message: String) { self.notice("[N]🟩 \(file):\(function):\(line) \(message)") }
-  func warning(file: String, line: Int, function: String, message: String) { self.warning("[W]🟨 \(file):\(function):\(line) \(message)") }
-  func error(file: String, line: Int, function: String, message: String) { self.error("[E]🟧 \(file):\(function):\(line) \(message)") }
-  func critical(file: String, line: Int, function: String, message: String) { self.critical("[C]🟥 \(file):\(function):\(line) \(message)") }
+  func trace(file: String, line: Int, function: String, message: String) {
+#if DEBUG
+    self.trace("[T]⬜️ \(file):\(function):\(line) \(message)")
+#endif
+  }
+  
+  func debug(file: String, line: Int, function: String, message: String) {
+#if DEBUG
+    self.debug("[D]🟪 \(file):\(function):\(line) \(message)")
+#endif
+  }
+  
+  func info(file: String, line: Int, function: String, message: String) {
+#if DEBUG
+    self.info("[I]🟦 \(file):\(function):\(line) \(message)")
+#endif
+  }
+  
+  func notice(file: String, line: Int, function: String, message: String) {
+#if DEBUG
+    self.notice("[N]🟩 \(file):\(function):\(line) \(message)")
+#endif
+  }
+  
+  func warning(file: String, line: Int, function: String, message: String) {
+#if DEBUG
+    self.warning("[W]🟨 \(file):\(function):\(line) \(message)")
+#endif
+  }
+  
+  func error(file: String, line: Int, function: String, message: String) {
+#if DEBUG
+    self.error("[E]🟧 \(file):\(function):\(line) \(message)")
+#endif
+  }
+  
+  func critical(file: String, line: Int, function: String, message: String) {
+#if DEBUG
+    self.critical("[C]🟥 \(file):\(function):\(line) \(message)")
+#endif
+  }
 }
