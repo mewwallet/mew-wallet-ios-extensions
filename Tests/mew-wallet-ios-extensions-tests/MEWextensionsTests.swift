@@ -240,4 +240,23 @@ final class MEWextensionsTests: XCTestCase {
     let number7 = Decimal(string: "-100000000.0000001")
     XCTAssertEqual(number7?.decimalString, "-100000000.0000001")
   }
+  
+  func test_url_domains() {
+    let host0 = URL(string: "https://google.com")!
+    let host1 = URL(string: "https://bbc.co.uk")!
+    let host2 = URL(string: "https://www.myetherwallet.com")!
+    let host3 = URL(string: "https://testsubdomain.test.website")!
+    
+    XCTAssertEqual(host0.domain, "google.com")
+    XCTAssertNil(host0.subdomain)
+    
+    XCTAssertEqual(host1.domain, "co.uk")
+    XCTAssertEqual(host1.subdomain, "bbc")
+    
+    XCTAssertEqual(host2.domain, "myetherwallet.com")
+    XCTAssertEqual(host2.subdomain, "www")
+    
+    XCTAssertEqual(host3.domain, "test.website")
+    XCTAssertEqual(host3.subdomain, "testsubdomain")
+  }
 }
