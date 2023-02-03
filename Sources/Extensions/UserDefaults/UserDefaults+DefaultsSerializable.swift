@@ -50,7 +50,7 @@ extension UserDefaults {
     
     guard let fetched else { return nil }
     
-    return try? T(storedValue: fetched as! T.StoredValue)
+    return try? T.load(from: fetched as! T.StoredValue)
   }
   
   func registerDefault<T: DefaultsSerializable>(value: T, key: any DefaultsKey) {
