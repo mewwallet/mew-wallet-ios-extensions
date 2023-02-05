@@ -130,37 +130,6 @@ extension Array: DefaultsSerializable where Element: DefaultsSerializable {
 }
 
 /// :nodoc:
-//extension Set: DefaultsSerializable where Element: DefaultsSerializable {
-//  public var storedValue: [Element.StoredValue] {
-//    self.map { $0.storedValue }
-//  }
-//
-//  public init(storedValue: [Element.StoredValue]) throws {
-//    self = try Set(storedValue.map { try Element(storedValue: $0) })
-//  }
-//}
-
-/// :nodoc:
-//extension Dictionary: DefaultsSerializable where Key == String, Value: DefaultsSerializable {
-//  public var storedValue: [String: Value.StoredValue] {
-//    self.mapValues { $0.storedValue }
-//  }
-//
-//  public init(storedValue: [String: Value.StoredValue]) throws {
-//    self = try storedValue.mapValues { try Value(storedValue: $0) }
-//  }
-//}
-
-/// :nodoc:
-//extension DefaultsSerializable where Self: RawRepresentable, Self.RawValue: DefaultsSerializable {
-//  public var storedValue: RawValue.StoredValue { self.rawValue.storedValue }
-//
-//  public init(storedValue: RawValue.StoredValue) throws {
-//    self = Self(rawValue: try Self.RawValue(storedValue: storedValue))!
-//  }
-//}
-
-/// :nodoc:
 extension Locale: DefaultsSerializable {
   public var storedValue: Self { self }
   
