@@ -34,15 +34,15 @@ public protocol DefaultsSerializable {
   /// Initializes the object using the provided value.
   ///
   /// - Parameter storedValue: The previously store value fetched from `UserDefaults`.
-  init(storedValue: StoredValue) throws
+  static func load(from storedValue: StoredValue) throws -> Self
 }
 
 /// :nodoc:
 extension Bool: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Bool) throws -> Bool {
+    return storedValue
   }
 }
 
@@ -50,8 +50,8 @@ extension Bool: DefaultsSerializable {
 extension Int: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> Int {
+    return storedValue
   }
 }
 
@@ -59,8 +59,8 @@ extension Int: DefaultsSerializable {
 extension UInt: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> UInt {
+    return storedValue
   }
 }
 
@@ -68,8 +68,8 @@ extension UInt: DefaultsSerializable {
 extension Float: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> Float {
+    return storedValue
   }
 }
 
@@ -77,8 +77,8 @@ extension Float: DefaultsSerializable {
 extension Double: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> Double {
+    return storedValue
   }
 }
 
@@ -86,8 +86,8 @@ extension Double: DefaultsSerializable {
 extension String: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> String {
+    return storedValue
   }
 }
 
@@ -95,8 +95,8 @@ extension String: DefaultsSerializable {
 extension URL: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> URL {
+    return storedValue
   }
 }
 
@@ -104,8 +104,8 @@ extension URL: DefaultsSerializable {
 extension Date: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> Date {
+    storedValue
   }
 }
 
@@ -113,8 +113,8 @@ extension Date: DefaultsSerializable {
 extension Data: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Self) throws -> Data {
+    return storedValue
   }
 }
 
@@ -124,39 +124,8 @@ extension Array: DefaultsSerializable where Element: DefaultsSerializable {
     self.map { $0.storedValue }
   }
   
-  public init(storedValue: [Element.StoredValue]) throws {
-    self = try storedValue.map { try Element(storedValue: $0) }
-  }
-}
-
-/// :nodoc:
-extension Set: DefaultsSerializable where Element: DefaultsSerializable {
-  public var storedValue: [Element.StoredValue] {
-    self.map { $0.storedValue }
-  }
-  
-  public init(storedValue: [Element.StoredValue]) throws {
-    self = try Set(storedValue.map { try Element(storedValue: $0) })
-  }
-}
-
-/// :nodoc:
-extension Dictionary: DefaultsSerializable where Key == String, Value: DefaultsSerializable {
-  public var storedValue: [String: Value.StoredValue] {
-    self.mapValues { $0.storedValue }
-  }
-  
-  public init(storedValue: [String: Value.StoredValue]) throws {
-    self = try storedValue.mapValues { try Value(storedValue: $0) }
-  }
-}
-
-/// :nodoc:
-extension DefaultsSerializable where Self: RawRepresentable, Self.RawValue: DefaultsSerializable {
-  public var storedValue: RawValue.StoredValue { self.rawValue.storedValue }
-  
-  public init(storedValue: RawValue.StoredValue) throws {
-    self = Self(rawValue: try Self.RawValue(storedValue: storedValue))!
+  public static func load(from storedValue: [Element.StoredValue]) throws -> Array<Element> {
+    return try storedValue.map({ try Element.load(from: $0) })
   }
 }
 
@@ -164,7 +133,7 @@ extension DefaultsSerializable where Self: RawRepresentable, Self.RawValue: Defa
 extension Locale: DefaultsSerializable {
   public var storedValue: Self { self }
   
-  public init(storedValue: Self) {
-    self = storedValue
+  public static func load(from storedValue: Locale) throws -> Locale {
+    return storedValue
   }
 }
