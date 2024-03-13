@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum CryptoUnit {
+public enum CryptoUnit: Sendable {
   case wei
   case kwei
   case mwei

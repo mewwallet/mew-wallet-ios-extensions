@@ -66,12 +66,12 @@ extension Publishers {
     }
     
     // own subcription is needed to handle cancel and decrease
-    private final class SubscribersCounterSubscription<Upstream>: Subscription where Upstream: Publisher {
-      let counter: SubscribersCounter<Upstream>
+    private final class SubscribersCounterSubscription<PrivateUpstream>: Subscription where PrivateUpstream: Publisher {
+      let counter: SubscribersCounter<PrivateUpstream>
       let wrapped: Subscription
       
       private var cancelled = false
-      init(counter: SubscribersCounter<Upstream>, subscription: Subscription) {
+      init(counter: SubscribersCounter<PrivateUpstream>, subscription: Subscription) {
         self.counter = counter
         self.wrapped = subscription
       }

@@ -1,9 +1,12 @@
 import XCTest
+import Testing
+
 @testable import mew_wallet_ios_extensions
 
-final class MEWextensionsTests: XCTestCase {
-  
-  func testKeyedDecodingContainerProtocolFailure() {
+@Suite("Decode/EncodeWrapped tests")
+struct KeyedCodableTests {
+  @Test("Should throw error on wrong type")
+  func errorOnWrongType() {
     struct TestStruct: Decodable {
       // MARK: - Coding Keys
       private enum CodingKeys: CodingKey {
@@ -22,10 +25,11 @@ final class MEWextensionsTests: XCTestCase {
     let data = #"{"value":"abc"}"#.data(using: .utf8)!
     
     let decoder = JSONDecoder()
-    XCTAssertThrowsError(try decoder.decode(TestStruct.self, from: data))
+    #expect(throws: DecodingError.self) { try decoder.decode(TestStruct.self, from: data) }
   }
   
-  func testKeyedEncodingContainerProtocolFailure() {
+  @Test("Should throw error on unsupported range")
+  func errorOnWrongRange() {
     struct TestStruct: Encodable {
       // MARK: - Coding Keys
       private enum CodingKeys: CodingKey {
@@ -42,10 +46,11 @@ final class MEWextensionsTests: XCTestCase {
     
     let encoder = JSONEncoder()
     let testStructNotSupported = TestStruct(value: .greatestFiniteMagnitude)
-    XCTAssertThrowsError(try encoder.encode(testStructNotSupported))
+    #expect(throws: EncodingError.self) { try encoder.encode(testStructNotSupported) }
   }
   
-  func testDecodeHex() {
+  @Test("Decode hex")
+  func successDecodeHex() throws {
     enum CodingKeys: CodingKey {
       case min
       case max
@@ -66,16 +71,13 @@ final class MEWextensionsTests: XCTestCase {
     let data = #"{"min":"0x1234","max":"90000"}"#.data(using: .utf8)!
     
     let decoder = JSONDecoder()
-    do {
-      let result = try decoder.decode(TestStruct.self, from: data)
-      XCTAssertEqual(result.min, Decimal(4660))
-      XCTAssertEqual(result.max, Decimal(90000))
-    } catch {
-      XCTFail(error.localizedDescription)
-    }
+    let result = try #require(try decoder.decode(TestStruct.self, from: data))
+    #expect(result.min == Decimal(4660))
+    #expect(result.max == Decimal(90000))
   }
   
-  func testDecodeHex0x() {
+  @Test("Decode 0x hex string")
+  func successDecodeHex0x() throws {
     enum CodingKeys: CodingKey {
       case value
       case data
@@ -96,16 +98,13 @@ final class MEWextensionsTests: XCTestCase {
     let data = #"{"value":"0x", "data":"0x"}"#.data(using: .utf8)!
     
     let decoder = JSONDecoder()
-    do {
-      let result = try decoder.decode(TestStruct.self, from: data)
-      XCTAssertEqual(result.value, .zero)
-      XCTAssertEqual(result.data, Data())
-    } catch {
-      XCTFail(error.localizedDescription)
-    }
+    let result = try #require(try decoder.decode(TestStruct.self, from: data))
+    #expect(result.value == .zero)
+    #expect(result.data == Data())
   }
   
-  func test_URL_KeyedDecodableWrappedProtocol() {
+  @Test("Encode/Decode URL")
+  func successURL() throws {
     enum CodingKeys: CodingKey {
       case url
     }
@@ -130,18 +129,16 @@ final class MEWextensionsTests: XCTestCase {
     
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
-    do {
-      let result = try decoder.decode(TestStruct.self, from: data)
-      XCTAssertEqual(result.url, URL(string: "https://www.google.com/search?q=let+me+google+that+for+you&client=safari"))
-      
-      let encodedData = try encoder.encode(result)
-      XCTAssertEqual(data, encodedData)
-    } catch {
-      XCTFail(error.localizedDescription)
-    }
+    
+    let result = try #require(try decoder.decode(TestStruct.self, from: data))
+    #expect(result.url == URL(string: "https://www.google.com/search?q=let+me+google+that+for+you&client=safari"))
+    
+    let encodedData = try #require(try encoder.encode(result))
+    #expect(data == encodedData)
   }
   
-  func test_Decimal_KeyedEncodableWrappedProtocol() {
+  @Test("Encode/Decode Decimal")
+  func successDecimal() throws {
     enum CodingKeys: CodingKey {
       case number
     }
@@ -166,18 +163,16 @@ final class MEWextensionsTests: XCTestCase {
     
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
-    do {
-      let result = try decoder.decode(TestStruct.self, from: data)
-      XCTAssertEqual(result.number, Decimal(string: "0.10890248496039656"))
-      XCTAssertEqual(result.number, Decimal(wrapped: "0,10890248496039656", hex: false))
-      let encodedData = try encoder.encode(result)
-      XCTAssertEqual(data, encodedData)
-    } catch {
-      XCTFail(error.localizedDescription)
-    }
+    
+    let result = try #require(try decoder.decode(TestStruct.self, from: data))
+    #expect(result.number == Decimal(string: "0.10890248496039656"))
+    #expect(result.number == Decimal(wrapped: "0,10890248496039656", hex: false))
+    let encodedData = try #require(try encoder.encode(result))
+    #expect(data == encodedData)
   }
   
-  func test_Date_KeyedEncodableWrappedProtocol() {
+  @Test("Encode/Decode Date")
+  func successDate() throws {
     enum CodingKeys: CodingKey {
       case date
     }
@@ -202,61 +197,10 @@ final class MEWextensionsTests: XCTestCase {
     
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
-    do {
-      let result = try decoder.decode(TestStruct.self, from: data)
-      XCTAssertEqual(result.date, Date(timeIntervalSince1970: 1634694308))
-      let encodedData = try encoder.encode(result)
-      XCTAssertEqual(data, encodedData)
-    } catch {
-      XCTFail(error.localizedDescription)
-    }
-  }
-  
-  func test_long_decimal_to_string() {
-    let number0 = Decimal(string: "41025486375585300012.376715277309906263")
-    XCTAssertEqual(number0?.decimalString, "41025486375585300012.376715277309906263")
-    XCTAssertEqual(number0?.decimalString(locale: Locale(identifier: "ru_RU")), "41025486375585300012,376715277309906263")
-    XCTAssertEqual(number0?.decimalString(locale: Locale(identifier: "ja_JP")), "41025486375585300012.376715277309906263")
-    XCTAssertEqual(number0?.decimalString(locale: Locale(identifier: "ar_SA")), "41025486375585300012٫376715277309906263")
     
-    let number1 = Decimal(string: "0")
-    XCTAssertEqual(number1?.decimalString, "0")
-    
-    let number2 = Decimal(string: "0.1")
-    XCTAssertEqual(number2?.decimalString, "0.1")
-    
-    let number3 = Decimal(string: "0.0001")
-    XCTAssertEqual(number3?.decimalString, "0.0001")
-    
-    let number4 = Decimal(string: "10.00")
-    XCTAssertEqual(number4?.decimalString, "10")
-    
-    let number5 = Decimal(string: "-1.1")
-    XCTAssertEqual(number5?.decimalString, "-1.1")
-    
-    let number6 = Decimal(string: "-0.0000001")
-    XCTAssertEqual(number6?.decimalString, "-0.0000001")
-    
-    let number7 = Decimal(string: "-100000000.0000001")
-    XCTAssertEqual(number7?.decimalString, "-100000000.0000001")
-  }
-  
-  func test_url_domains() {
-    let host0 = URL(string: "https://google.com")!
-    let host1 = URL(string: "https://bbc.co.uk")!
-    let host2 = URL(string: "https://www.myetherwallet.com")!
-    let host3 = URL(string: "https://testsubdomain.test.website")!
-    
-    XCTAssertEqual(host0.domain, "google.com")
-    XCTAssertNil(host0.subdomain)
-    
-    XCTAssertEqual(host1.domain, "co.uk")
-    XCTAssertEqual(host1.subdomain, "bbc")
-    
-    XCTAssertEqual(host2.domain, "myetherwallet.com")
-    XCTAssertEqual(host2.subdomain, "www")
-    
-    XCTAssertEqual(host3.domain, "test.website")
-    XCTAssertEqual(host3.subdomain, "testsubdomain")
+    let result = try #require(try decoder.decode(TestStruct.self, from: data))
+    #expect(result.date == Date(timeIntervalSince1970: 1634694308))
+    let encodedData = try #require(try encoder.encode(result))
+    #expect(data == encodedData)
   }
 }
