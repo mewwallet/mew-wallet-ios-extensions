@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal let FiatCurrencyMap: [String: FiatCurrency] = [
+fileprivate let FiatCurrencyMap: [String: FiatCurrency] = [
   "AED": .aed, "AFN": .afn, "ALL": .all, "AMD": .amd, "ANG": .ang, "AOA": .aoa,
   "ARS": .ars, "AUD": .aud, "AWG": .awg, "AZN": .azn, "BAM": .bam, "BBD": .bbd,
   "BDT": .bdt, "BGN": .bgn, "BHD": .bhd, "BIF": .bif, "BMD": .bmd, "BND": .bnd,
@@ -38,7 +38,7 @@ internal let FiatCurrencyMap: [String: FiatCurrency] = [
   "XPF": .xpf, "YER": .yer, "ZAR": .zar, "ZMK": .zmk, "ZMW": .zmw, "ZWL": .zwl
 ]
 
-public enum FiatCurrency: String, Sendable {
+public enum FiatCurrency: String, Sendable, Equatable, Hashable {
   case aed    = "AED"
   case afn    = "AFN"
   case all    = "ALL"
@@ -224,6 +224,49 @@ public enum FiatCurrency: String, Sendable {
     case .eur:    return 2
     case .jpy:    return 2
     default:      return 2
+    }
+  }
+  
+  public var amounts: [Decimal] {
+    switch self {
+    case .usd, .eur, .aud, .cad, .gbp:
+      return [
+        Decimal(integerLiteral: 50),
+        Decimal(integerLiteral: 100),
+        Decimal(integerLiteral: 250),
+        Decimal(integerLiteral: 500),
+        Decimal(integerLiteral: 1_000),
+        Decimal(integerLiteral: 2_500),
+        Decimal(integerLiteral: 5_000),
+        Decimal(integerLiteral: 10_000),
+        Decimal(integerLiteral: 12_500)
+      ]
+    case .rub:
+      return [
+        Decimal(integerLiteral: 5_000),
+        Decimal(integerLiteral: 10_000),
+        Decimal(integerLiteral: 25_000),
+        Decimal(integerLiteral: 50_000),
+        Decimal(integerLiteral: 100_000),
+        Decimal(integerLiteral: 250_000),
+        Decimal(integerLiteral: 500_000),
+        Decimal(integerLiteral: 1_000_000),
+        Decimal(integerLiteral: 1_250_000),
+      ]
+    case .jpy:
+      return [
+        Decimal(integerLiteral: 5_000),
+        Decimal(integerLiteral: 10_000),
+        Decimal(integerLiteral: 25_000),
+        Decimal(integerLiteral: 50_000),
+        Decimal(integerLiteral: 100_000),
+        Decimal(integerLiteral: 250_000),
+        Decimal(integerLiteral: 500_000),
+        Decimal(integerLiteral: 1_000_000),
+        Decimal(integerLiteral: 1_250_000),
+      ]
+    default:
+      return []
     }
   }
 }
