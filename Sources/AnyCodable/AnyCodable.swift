@@ -65,7 +65,7 @@ extension AnyCodable: CustomStringConvertible {
     switch value {
     case is Void:
       return String(describing: nil as Any?)
-    case let value as CustomStringConvertible:
+    case let value as any CustomStringConvertible:
       return value.description
     default:
       return String(describing: value)
@@ -76,7 +76,7 @@ extension AnyCodable: CustomStringConvertible {
 extension AnyCodable: CustomDebugStringConvertible {
   public var debugDescription: String {
     switch value {
-    case let value as CustomDebugStringConvertible:
+    case let value as any CustomDebugStringConvertible:
       return "AnyCodable(\(value.debugDescription))"
     default:
       return "AnyCodable(\(description))"

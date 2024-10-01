@@ -34,7 +34,7 @@ extension AnyEncodable: _AnyEncodable {}
 
 extension _AnyEncodable {
   //swiftlint:disable:next function_body_length
-  public func encode(to encoder: Encoder) throws {
+  public func encode(to encoder: any Encoder) throws {
     var container = encoder.singleValueContainer()
     
     switch value {
@@ -87,7 +87,7 @@ extension _AnyEncodable {
   }
   
   #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
-  private func encode(nsnumber: NSNumber, into container: inout SingleValueEncodingContainer) throws {
+  private func encode(nsnumber: NSNumber, into container: inout any SingleValueEncodingContainer) throws {
     switch CFNumberGetType(nsnumber) {
     case .charType:
       try container.encode(nsnumber.boolValue)
@@ -168,7 +168,7 @@ extension AnyEncodable: CustomStringConvertible {
     switch value {
     case is Void:
       return String(describing: nil as Any?)
-    case let value as CustomStringConvertible:
+    case let value as any CustomStringConvertible:
       return value.description
     default:
       return String(describing: value)
@@ -179,7 +179,7 @@ extension AnyEncodable: CustomStringConvertible {
 extension AnyEncodable: CustomDebugStringConvertible {
   public var debugDescription: String {
     switch value {
-    case let value as CustomDebugStringConvertible:
+    case let value as any CustomDebugStringConvertible:
       return "AnyEncodable(\(value.debugDescription))"
     default:
       return "AnyEncodable(\(description))"
