@@ -213,6 +213,10 @@ public enum FiatCurrency: String, Sendable {
     self = FiatCurrencyMap[rawValue.uppercased()] ?? .unknown
   }
   
+  public init(currencyCode code: String) {
+    self = FiatCurrencyMap[code.uppercased()] ?? .unknown
+  }
+  
   public var decimals: Int {
     switch self {
     case .usd:    return 2
