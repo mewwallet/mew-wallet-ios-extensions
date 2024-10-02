@@ -38,7 +38,11 @@ fileprivate let FiatCurrencyMap: [String: FiatCurrency] = [
   "XPF": .xpf, "YER": .yer, "ZAR": .zar, "ZMK": .zmk, "ZMW": .zmw, "ZWL": .zwl
 ]
 
-public enum FiatCurrency: String, Sendable, Equatable, Hashable {
+public enum FiatCurrency: String, Sendable, Equatable, Hashable, Comparable {
+  public static func < (lhs: FiatCurrency, rhs: FiatCurrency) -> Bool {
+    lhs.rawValue < rhs.rawValue
+  }
+  
   case aed    = "AED"
   case afn    = "AFN"
   case all    = "ALL"
