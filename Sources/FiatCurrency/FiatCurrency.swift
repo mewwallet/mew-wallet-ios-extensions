@@ -38,7 +38,7 @@ fileprivate let FiatCurrencyMap: [String: FiatCurrency] = [
   "XPF": .xpf, "YER": .yer, "ZAR": .zar, "ZMK": .zmk, "ZMW": .zmw, "ZWL": .zwl
 ]
 
-public enum FiatCurrency: String, Sendable, Equatable, Hashable, Comparable, Identifiable {
+public enum FiatCurrency: String, Sendable, Equatable, Hashable, Comparable, Identifiable, Codable {
   public var id: String { self.rawValue }
   
   public static func < (lhs: FiatCurrency, rhs: FiatCurrency) -> Bool {
