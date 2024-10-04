@@ -7,8 +7,6 @@
 
 import Foundation
 
-// TODO: MUST BE COVERED BY TESTS
-
 extension Locale {
   public func amountPrefix(currency: FiatCurrency) -> String? {
     let formatter = NumberFormatter()
