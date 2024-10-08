@@ -31,7 +31,7 @@ protocol _AnyDecodable {
 extension AnyDecodable: _AnyDecodable {}
 
 extension _AnyDecodable {
-  public init(from decoder: Decoder) throws {
+  public init(from decoder: any Decoder) throws {
     let container = try decoder.singleValueContainer()
     
     if container.decodeNil() {
@@ -104,7 +104,7 @@ extension AnyDecodable: CustomStringConvertible {
     switch value {
     case is Void:
       return String(describing: nil as Any?)
-    case let value as CustomStringConvertible:
+    case let value as any CustomStringConvertible:
       return value.description
     default:
       return String(describing: value)
@@ -115,7 +115,7 @@ extension AnyDecodable: CustomStringConvertible {
 extension AnyDecodable: CustomDebugStringConvertible {
   public var debugDescription: String {
     switch value {
-    case let value as CustomDebugStringConvertible:
+    case let value as any CustomDebugStringConvertible:
       return "AnyDecodable(\(value.debugDescription))"
     default:
       return "AnyDecodable(\(description))"

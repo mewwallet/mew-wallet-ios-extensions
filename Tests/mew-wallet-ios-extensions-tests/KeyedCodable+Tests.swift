@@ -15,7 +15,7 @@ struct KeyedCodableTests {
       
       let value: Decimal
       
-      init(from decoder: Decoder) throws {
+      init(from decoder: any Decoder) throws {
         let container         = try decoder.container(keyedBy: CodingKeys.self)
         let value: Decimal    = try container.decodeWrapped(String.self, forKey: .value)
         self.value = value
@@ -38,7 +38,7 @@ struct KeyedCodableTests {
       
       let value: Decimal
       
-      func encode(to encoder: Encoder) throws {
+      func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.value, forKey: .value, wrapIn: Bool.self)
       }
@@ -60,7 +60,7 @@ struct KeyedCodableTests {
       let min: Decimal
       let max: Decimal
       
-      init(from decoder: Decoder) throws {
+      init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
             
         min = try container.decodeWrapped(String.self, forKey: .min, decodeHex: true)
@@ -87,7 +87,7 @@ struct KeyedCodableTests {
       let value: Decimal
       let data: Data
       
-      init(from decoder: Decoder) throws {
+      init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
             
         value = try container.decodeWrapped(String.self, forKey: .value, decodeHex: true)
@@ -112,13 +112,13 @@ struct KeyedCodableTests {
     struct TestStruct: Codable {
       let url: URL
       
-      init(from decoder: Decoder) throws {
+      init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
             
         url = try container.decodeWrapped(String.self, forKey: .url)
       }
       
-      func encode(to encoder: Encoder) throws {
+      func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(self.url, forKey: .url, wrapIn: String.self)
@@ -146,13 +146,13 @@ struct KeyedCodableTests {
     struct TestStruct: Codable {
       let number: Decimal
       
-      init(from decoder: Decoder) throws {
+      init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         number = try container.decodeWrapped(String.self, forKey: .number)
       }
       
-      func encode(to encoder: Encoder) throws {
+      func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(self.number, forKey: .number, wrapIn: String.self)
@@ -180,13 +180,13 @@ struct KeyedCodableTests {
     struct TestStruct: Codable {
       let date: Date
       
-      init(from decoder: Decoder) throws {
+      init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         date = try container.decodeWrapped(String.self, forKey: .date, decodeHex: true)
       }
       
-      func encode(to encoder: Encoder) throws {
+      func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(self.date, forKey: .date, wrapIn: String.self, encodeHex: true)

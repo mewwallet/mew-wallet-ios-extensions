@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Data: ExpressibleByStringLiteral {
+extension Data: @retroactive ExpressibleByStringLiteral {
   public init(stringLiteral value: StringLiteralType) {
     self = Data(hex: value)
   }

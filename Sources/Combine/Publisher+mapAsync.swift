@@ -9,11 +9,16 @@ import Foundation
 import Combine
 
 extension Publisher {
-  public func mapAsync<T>(_ transform: @escaping (Output) async -> T) -> Publishers.FlatMap<Future<T, Never>, Self> {
+  public func mapAsync<T: Sendable>(_ transform: @escaping @Sendable (Output) async -> T) -> Publishers.FlatMap<Future<T, Never>, Self> {
     flatMap { value in
-      Future { promise in
+      let value = UnknownSendable(value: value)
+      
+      return Future<T, Never> { promise in
+        let promise = UnknownSendable(value: promise)
+        
         Task {
-          promise(.success(await transform(value)))
+          let result = await transform(value.value)
+          promise.value(.success(result))
         }
       }
     }

@@ -9,15 +9,19 @@ import Foundation
 import Combine
 
 extension Publisher {
-  public func mapAsyncThrows<T>(_ transform: @escaping (Output) async throws -> T) -> Publishers.FlatMap<Future<T, Error>, Publishers.SetFailureType<Self, Error>> {
+  public func mapAsyncThrows<T>(_ transform: @escaping @Sendable (Output) async throws -> T) -> Publishers.FlatMap<Future<T, any Error>, Publishers.SetFailureType<Self, any Error>> {
     flatMap { value in
-      Future { promise in
+      let value = UnknownSendable(value: value)
+      
+      return Future { promise in
+        let promise = UnknownSendable(value: promise)
+        
         Task {
           do {
-            let output = try await transform(value)
-            promise(.success(output))
+            let output = try await transform(value.value)
+            promise.value(.success(output))
           } catch {
-            promise(.failure(error))
+            promise.value(.failure(error))
           }
         }
       }
