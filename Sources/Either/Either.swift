@@ -51,7 +51,7 @@ extension Either: Hashable where L: Hashable, R: Hashable {}
 
 extension Either: Codable where L: Codable, R: Codable {
   
-  public init(from decoder: Decoder) throws {
+  public init(from decoder: any Decoder) throws {
     if let left = try? L(from: decoder) {
       self.init(left)
     } else if let right = try? R(from: decoder) {
@@ -63,7 +63,7 @@ extension Either: Codable where L: Codable, R: Codable {
     }
   }
   
-  public func encode(to encoder: Encoder) throws {
+  public func encode(to encoder: any Encoder) throws {
     switch self {
     case let .left(left):
       try left.encode(to: encoder)

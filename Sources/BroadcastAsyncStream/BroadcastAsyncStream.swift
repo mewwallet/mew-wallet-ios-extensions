@@ -105,10 +105,11 @@ extension BroadcastAsyncStream {
     
     init(_ id: UUID = UUID(), elementType: StreamElement.Type = StreamElement.self, bufferingPolicy limit: AsyncStream<StreamElement>.Continuation.BufferingPolicy = .unbounded, _ build: (AsyncStream<StreamElement>.Continuation) -> Void) {
       self.id = id
-      self.asyncStream = AsyncStream(elementType, bufferingPolicy: limit) { continuation in
-        self.continuation = continuation
-        build(continuation)
-      }
+      
+      let (stream, continuation) = AsyncStream.makeStream(of: elementType, bufferingPolicy: limit)
+      self.asyncStream = stream
+      self.continuation = continuation
+      build(continuation)
     }
 
     public var onTermination: (@Sendable (AsyncStream<StreamElement>.Continuation.Termination) -> Void)? {

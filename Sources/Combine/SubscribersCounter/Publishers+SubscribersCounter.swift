@@ -49,7 +49,7 @@ extension Publishers {
         self.subscriber = subscriber
       }
       
-      func receive(subscription: Subscription) {
+      func receive(subscription: any Subscription) {
         subscriber.receive(subscription: SubscribersCounterSubscription<Upstream>(counter: counter, subscription: subscription))
       }
       
@@ -68,10 +68,10 @@ extension Publishers {
     // own subcription is needed to handle cancel and decrease
     private final class SubscribersCounterSubscription<PrivateUpstream>: Subscription where PrivateUpstream: Publisher {
       let counter: SubscribersCounter<PrivateUpstream>
-      let wrapped: Subscription
+      let wrapped: any Subscription
       
       private var cancelled = false
-      init(counter: SubscribersCounter<PrivateUpstream>, subscription: Subscription) {
+      init(counter: SubscribersCounter<PrivateUpstream>, subscription: any Subscription) {
         self.counter = counter
         self.wrapped = subscription
       }

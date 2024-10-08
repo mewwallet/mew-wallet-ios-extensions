@@ -30,7 +30,7 @@ struct WeakThreadSafeTests {
       #expect(lock.value == nil)
       
       group.addTask {
-        var object = TestClass(id: id)
+        let object = TestClass(id: id)
         lock.value = object
         
         #expect(lock.value?.id == id)
