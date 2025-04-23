@@ -8,6 +8,10 @@
 import Foundation
 
 public enum CryptoUnit: Sendable {
+  // Bitcoin
+  case satoshi
+  case bitcoin
+  // Ethereum
   case wei
   case kwei
   case mwei
@@ -23,6 +27,12 @@ public enum CryptoUnit: Sendable {
   
   public var decimals: Decimal {
     switch self {
+      // Bitcoin
+    case .satoshi:
+      return Decimal(1)
+    case .bitcoin:
+      return Decimal(8)
+      // Ethereum
     case .wei:
       return Decimal(1)
     case .kwei:
