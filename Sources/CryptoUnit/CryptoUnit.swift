@@ -31,7 +31,7 @@ public enum CryptoUnit: Sendable {
     case .satoshi:
       return Decimal(1)
     case .bitcoin:
-      return Decimal(8)
+      return Decimal(sign: .plus, exponent: -8, significand: Decimal(1))
       // Ethereum
     case .wei:
       return Decimal(1)
