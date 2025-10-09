@@ -41,6 +41,8 @@ public enum CryptoUnit: Sendable {
   case tether
   
   // MARK: Solana units
+  /// 1,000,000 micro-lamports = 1 lamport
+  case microlamport
   /// Smallest unit of Solana
   case lamport
   /// Standard unit of Solana (1e+9 lamports)
@@ -108,6 +110,10 @@ public enum CryptoUnit: Sendable {
       return Decimal(sign: .plus, exponent: -30, significand: Decimal(1))
       
       // MARK: Solana units
+    case .microlamport:
+      // 1 microlamport
+      return Decimal(sign: .plus, exponent: -6, significand: Decimal(1))
+      
     case .lamport:
       // 1 lamport
       return Decimal(1)

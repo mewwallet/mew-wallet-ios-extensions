@@ -8,6 +8,7 @@
 import Foundation
 
 public struct TransactionFeePriceOptions {
+  public let flat: TransactionFeePrice
   public let opportunistic: TransactionFeePrice
   public let economy: TransactionFeePrice
   public let recommended: TransactionFeePrice
@@ -21,6 +22,7 @@ public struct TransactionFeePriceOptions {
   public init(baseFee: Decimal, gasPrice: Decimal) {
     let baseTip = gasPrice - baseFee
     
+    self.flat             = TransactionFeePrice(baseFee: baseFee, tip: baseTip, speed: .flat)
     self.opportunistic    = TransactionFeePrice(baseFee: baseFee, tip: baseTip, speed: .opportunistic)
     self.economy          = TransactionFeePrice(baseFee: baseFee, tip: baseTip, speed: .economy)
     self.recommended      = TransactionFeePrice(baseFee: baseFee, tip: baseTip, speed: .recommended)
@@ -28,11 +30,13 @@ public struct TransactionFeePriceOptions {
     self.highestPriority  = TransactionFeePrice(baseFee: baseFee, tip: baseTip, speed: .highestPriority)
   }
   
-  init(opportunistic: TransactionFeePrice,
+  init(flat: TransactionFeePrice,
+       opportunistic: TransactionFeePrice,
        economy: TransactionFeePrice,
        recommended: TransactionFeePrice,
        higherPriority: TransactionFeePrice,
        highestPriority: TransactionFeePrice) {
+    self.flat = flat
     self.opportunistic = opportunistic
     self.economy = economy
     self.recommended = recommended
@@ -59,6 +63,19 @@ public struct TransactionFeePriceOptions {
     return TransactionFee(limit: limit, price: self.recommended)
   }
   
+  public func fee(limit: Decimal, speed: TransactionFeeSpeed) -> TransactionFee {
+    switch speed {
+    case .zero:               return TransactionFee(limit: limit, price: self.economy)
+    case .flat:               return TransactionFee(limit: limit, price: self.flat)
+    case .legacy:             return TransactionFee(limit: limit, price: self.economy)
+    case .opportunistic:      return TransactionFee(limit: limit, price: self.opportunistic)
+    case .economy:            return TransactionFee(limit: limit, price: self.economy)
+    case .recommended:        return TransactionFee(limit: limit, price: self.recommended)
+    case .higherPriority:     return TransactionFee(limit: limit, price: self.higherPriority)
+    case .highestPriority:    return TransactionFee(limit: limit, price: self.highestPriority)
+    }
+  }
+  
   public func options(limit: Decimal, isCritical: Bool) -> [TransactionFee] {
     var options: [TransactionFee] = [
       self.recommended,
@@ -75,6 +92,9 @@ public struct TransactionFeePriceOptions {
   public func replacement(currentTip: Decimal) -> TransactionFeePriceOptions {
     let minimumTip = currentTip * Decimal(1.1)
     
+    let flat = TransactionFeePrice(exactBaseFee: self.flat.baseFee,
+                                            exactTip: self.opportunistic.tip,
+                                            speed: .flat)
     let opportunistic = TransactionFeePrice(exactBaseFee: self.opportunistic.baseFee,
                                             exactTip: max(minimumTip, self.opportunistic.tip),
                                             speed: .opportunistic)
@@ -91,7 +111,8 @@ public struct TransactionFeePriceOptions {
                                             exactTip: max(minimumTip, self.highestPriority.tip),
                                             speed: .highestPriority)
     
-    return TransactionFeePriceOptions(opportunistic: opportunistic,
+    return TransactionFeePriceOptions(flat: flat,
+                                      opportunistic: opportunistic,
                                       economy: economy,
                                       recommended: recommended,
                                       higherPriority: higherPriority,

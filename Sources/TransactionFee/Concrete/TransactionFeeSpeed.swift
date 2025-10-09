@@ -9,6 +9,7 @@ import Foundation
 
 public enum TransactionFeeSpeed: Hashable, Sendable {
   case zero
+  case flat
   case legacy
   case opportunistic
   case economy
@@ -20,6 +21,7 @@ public enum TransactionFeeSpeed: Hashable, Sendable {
     if gasPrice.convert(to: .gwei) < Decimal(10) {
       switch self {
       case .zero:             return .zero
+      case .flat:             return Decimal(1.0)
       case .legacy:           return Decimal(1.0)
       case .opportunistic:    return Decimal(1.0)
       case .economy:          return Decimal(1.1)
@@ -30,6 +32,7 @@ public enum TransactionFeeSpeed: Hashable, Sendable {
     } else {
       switch self {
       case .zero:             return .zero
+      case .flat:             return Decimal(1.0)
       case .legacy:           return Decimal(1.0)
       case .opportunistic:    return Decimal(0.9)
       case .economy:          return Decimal(1.0)
@@ -44,6 +47,7 @@ public enum TransactionFeeSpeed: Hashable, Sendable {
     if gasPrice.convert(to: .gwei) <= Decimal(10) {
       switch self {
       case .zero:             return .zero
+      case .flat:             return Decimal(1.0)
       case .legacy:           return Decimal(1.0)
       case .opportunistic:    return Decimal(1.0)
       case .economy:          return Decimal(1.1)
@@ -54,6 +58,7 @@ public enum TransactionFeeSpeed: Hashable, Sendable {
     } else {
       switch self {
       case .zero:             return .zero
+      case .flat:             return Decimal(1.0)
       case .legacy:           return Decimal(1.0)
       case .opportunistic:    return Decimal(0.8)
       case .economy:          return Decimal(0.8)
@@ -67,6 +72,7 @@ public enum TransactionFeeSpeed: Hashable, Sendable {
   public var duration: TimeInterval {
     switch self {
     case .zero:             return .zero
+    case .flat:             return .zero
     case .legacy:           return .zero
     case .opportunistic:    return 1200.0
     case .economy:          return 600.0
