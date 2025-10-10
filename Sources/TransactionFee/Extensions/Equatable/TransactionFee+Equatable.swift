@@ -6,10 +6,10 @@
 //
 
 import Foundation
-
-extension TransactionFee: Equatable {
-  public static func == (lhs: TransactionFee, rhs: TransactionFee) -> Bool {
-    return
-      lhs.price == rhs.price
-  }
-}
+//
+//extension TransactionFee: Equatable {
+//  public static func == (lhs: TransactionFee, rhs: TransactionFee) -> Bool {
+//    return
+//      lhs.price == rhs.price
+//  }
+//}

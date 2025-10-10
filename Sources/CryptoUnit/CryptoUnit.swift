@@ -112,7 +112,7 @@ public enum CryptoUnit: Sendable {
       // MARK: Solana units
     case .microlamport:
       // 1 microlamport
-      return Decimal(sign: .plus, exponent: -6, significand: Decimal(1))
+      return Decimal(sign: .plus, exponent: 6, significand: Decimal(1))
       
     case .lamport:
       // 1 lamport
