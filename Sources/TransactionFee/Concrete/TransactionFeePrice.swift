@@ -124,7 +124,7 @@ public struct SOLTransactionFeePrice: TransactionFeePrice, Hashable, Sendable {
 //    let gasPrice = baseFee + tip
     self.speed = speed
     self.baseFee = baseFee.rounded(0, .up)
-    self.tip = tip.rounded(0, .up)
+    self.tip = tip.rounded(CryptoUnit.microlamport.decimals.exponent, .up)
   }
   
   /// Creates fee price with exact values
@@ -144,7 +144,7 @@ public struct SOLTransactionFeePrice: TransactionFeePrice, Hashable, Sendable {
   ///   - decimals: nil or token decimals, must be (10^-`decimals`) representation
   /// - Returns: Raw amount: in WEI, if `decimals` is `nil` and amount in ETH if decimals
   public func amount(for limit: Decimal, decimals: Decimal?) -> Decimal {
-    return self.baseFee + (self.tip * limit).convert(to: .lamport)
+    return (self.baseFee + (self.tip * limit).convert(to: .lamport)) * (decimals ?? Decimal(1))
   }
   
   /// Validates the provided balance can pay current fee
