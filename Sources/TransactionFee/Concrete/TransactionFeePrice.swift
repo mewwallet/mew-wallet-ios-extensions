@@ -121,7 +121,6 @@ public struct SOLTransactionFeePrice: TransactionFeePrice, Hashable, Sendable {
   ///   - tip: maxPriorityFeePerGas
   ///   - speed: TransactionFeeSpeed
   public init(baseFee: Decimal, tip: Decimal, speed: TransactionFeeSpeed) {
-//    let gasPrice = baseFee + tip
     self.speed = speed
     self.baseFee = baseFee.rounded(0, .up)
     self.tip = tip.rounded(CryptoUnit.microlamport.decimals.exponent, .up)
@@ -151,7 +150,7 @@ public struct SOLTransactionFeePrice: TransactionFeePrice, Hashable, Sendable {
   /// - Parameters:
   ///   - limit: gasLimit of transaction(s)
   ///   - balance: raw account balance
-  /// - Returns: true, if balance can conver transaction fee
+  /// - Returns: true, if balance can cover transaction fee
   public func canBeUsed(for limit: Decimal, balance: Decimal) -> Bool {
     return self.amount(for: limit, decimals: nil) <= balance
   }

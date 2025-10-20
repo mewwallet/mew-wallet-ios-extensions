@@ -41,7 +41,7 @@ public enum CryptoUnit: Sendable {
   case tether
   
   // MARK: Solana units
-  /// 1 lamport = 1,000,000 micro-lamports 
+  /// 1 lamport = 1,000,000 micro-lamports
   case microlamport
   /// Smallest unit of Solana
   case lamport
