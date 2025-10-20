@@ -28,7 +28,7 @@ public protocol TransactionFee<T>: Hashable, Sendable, Equatable {
   /// Validates the provided balance can pay fee
   /// - Parameters:
   ///   - balance: raw account balance
-  /// - Returns: true, if balance can conver transaction fee
+  /// - Returns: true, if balance can cover transaction fee
   func canBeUsed(for balance: Decimal) -> Bool
   
   static func == (lhs: Self, rhs: Self) -> Bool
@@ -73,7 +73,7 @@ public struct ConcreteTransactionFee<PRICE: TransactionFeePrice>: TransactionFee
   /// Validates the provided balance can pay fee
   /// - Parameters:
   ///   - balance: raw account balance
-  /// - Returns: true, if balance can conver transaction fee
+  /// - Returns: true, if balance can cover transaction fee
   public func canBeUsed(for balance: Decimal) -> Bool {
     return self.price.canBeUsed(for: self.limit, balance: balance)
   }

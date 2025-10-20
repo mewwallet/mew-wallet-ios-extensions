@@ -41,7 +41,7 @@ public protocol TransactionFeePrice: Hashable, Sendable, Equatable {
   /// - Parameters:
   ///   - limit: gasLimit of transaction(s)
   ///   - balance: raw account balance
-  /// - Returns: true, if balance can conver transaction fee
+  /// - Returns: true, if balance can cover transaction fee
   func canBeUsed(for limit: Decimal, balance: Decimal) -> Bool
   
   static func == (lhs: Self, rhs: Self) -> Bool
@@ -96,7 +96,7 @@ public struct EVMTransactionFeePrice: TransactionFeePrice, Hashable, Sendable {
   /// - Parameters:
   ///   - limit: gasLimit of transaction(s)
   ///   - balance: raw account balance
-  /// - Returns: true, if balance can conver transaction fee
+  /// - Returns: true, if balance can cover transaction fee
   public func canBeUsed(for limit: Decimal, balance: Decimal) -> Bool {
     return self.amount(for: limit, decimals: nil) <= balance
   }
