@@ -93,7 +93,7 @@ public struct TransactionFeePriceOptions<TF: TransactionFee>: Equatable {
     let minimumTip = currentTip * Decimal(1.1)
     
     let flat = TF.T(exactBaseFee: self.flat.baseFee,
-                 exactTip: self.opportunistic.tip,
+                 exactTip: self.flat.tip,
                  speed: .flat)
     let opportunistic = TF.T(exactBaseFee: self.opportunistic.baseFee,
                           exactTip: max(minimumTip, self.opportunistic.tip),

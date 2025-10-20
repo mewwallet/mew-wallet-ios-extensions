@@ -107,7 +107,7 @@ public struct SOLTransactionFeePrice: TransactionFeePrice, Hashable, Sendable {
   public let baseFee: Decimal
   public let tip: Decimal
   public var totalFee: Decimal {
-    fatalError("Not valid for SOL")
+    fatalError("totalFee is not applicable for Solana transactions")
   }
   
   /// Zero (empty) transaction fee speed
