@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Represents various cryptocurrency units for Bitcoin and Ethereum.
+/// Represents various cryptocurrency units for Bitcoin, Ethereum, and Solana.
 /// Implements the `Sendable` protocol for safe concurrent use.
 public enum CryptoUnit: Sendable {
   // MARK: Bitcoin units
@@ -39,6 +39,18 @@ public enum CryptoUnit: Sendable {
   case gether
   /// 1e+30 wei (Tera Ether)
   case tether
+  
+  // MARK: Solana units
+  /// 1 lamport = 1,000,000 micro-lamports
+  case microlamport
+  /// Smallest unit of Solana
+  case lamport
+  /// Standard unit of Solana (1e+9 lamports)
+  case sol
+  
+  /// == 1, means no change in conversion
+  case one
+  
   /// Custom unit with a specified number of decimal places
   case custom(_ decimals: Int)
   
@@ -99,6 +111,22 @@ public enum CryptoUnit: Sendable {
     case .tether:
       // 1e+30 wei
       return Decimal(sign: .plus, exponent: -30, significand: Decimal(1))
+      
+      // MARK: Solana units
+    case .microlamport:
+      // 1 microlamport
+      return Decimal(sign: .plus, exponent: 6, significand: Decimal(1))
+      
+    case .lamport:
+      // 1 lamport
+      return Decimal(1)
+      
+    case .sol:
+      // 1 SOL equals 1,000,000,000 lamports (1e+9)
+      return Decimal(sign: .plus, exponent: -9, significand: Decimal(1))
+      
+    case .one:
+      return Decimal(1)
       
     case let .custom(decimals):
       // Custom unit with a variable number of decimal places

@@ -7,16 +7,46 @@
 
 import Foundation
 
-public struct TransactionFee: Hashable, Sendable {
-  public var limit: Decimal
-  public var price: TransactionFeePrice
+public protocol TransactionFee<T>: Hashable, Sendable, Equatable {
+  associatedtype T: TransactionFeePrice
+  var limit: Decimal { get }
+  var price: T { get }
   
   /// Zero (empty) transaction fee
-  public static var zero: TransactionFee {
-    return TransactionFee(limit: .zero, price: .zero)
+  static var zero: Self { get }
+  
+  init(limit: Decimal, price: T)
+  
+  mutating func update(limit: Decimal)
+  
+  mutating func update(price: T)
+  
+  func amount(decimals: Decimal?) -> Decimal
+  
+  func amount(decimals: Int) -> Decimal
+  
+  /// Validates the provided balance can pay fee
+  /// - Parameters:
+  ///   - balance: raw account balance
+  /// - Returns: true, if balance can cover transaction fee
+  func canBeUsed(for balance: Decimal) -> Bool
+  
+  static func == (lhs: Self, rhs: Self) -> Bool
+}
+
+public typealias EVMTransactionFee = ConcreteTransactionFee<EVMTransactionFeePrice>
+public typealias SOLTransactionFee = ConcreteTransactionFee<SOLTransactionFeePrice>
+
+public struct ConcreteTransactionFee<PRICE: TransactionFeePrice>: TransactionFee, Hashable, Equatable, Sendable {
+  public var limit: Decimal
+  public var price: PRICE
+  
+  /// Zero (empty) transaction fee
+  public static var zero: Self {
+    return Self(limit: .zero, price: T.zero)
   }
   
-  public init(limit: Decimal, price: TransactionFeePrice) {
+  public init(limit: Decimal, price: PRICE) {
     self.limit = limit
     self.price = price
   }
@@ -25,7 +55,7 @@ public struct TransactionFee: Hashable, Sendable {
     self.limit = limit
   }
   
-  public mutating func update(price: TransactionFeePrice) {
+  public mutating func update(price: PRICE) {
     self.price = price
   }
   
@@ -43,8 +73,12 @@ public struct TransactionFee: Hashable, Sendable {
   /// Validates the provided balance can pay fee
   /// - Parameters:
   ///   - balance: raw account balance
-  /// - Returns: true, if balance can conver transaction fee
+  /// - Returns: true, if balance can cover transaction fee
   public func canBeUsed(for balance: Decimal) -> Bool {
     return self.price.canBeUsed(for: self.limit, balance: balance)
+  }
+  
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    return lhs.price == rhs.price
   }
 }
