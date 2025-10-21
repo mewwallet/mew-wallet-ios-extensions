@@ -7,9 +7,14 @@
 
 import Foundation
 
-extension TransactionFeePrice: Equatable {
-  public static func == (lhs: TransactionFeePrice, rhs: TransactionFeePrice) -> Bool {
-    return
-      lhs.speed == rhs.speed
+extension EVMTransactionFeePrice: Equatable {
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    return lhs.speed == rhs.speed
+  }
+}
+
+extension SOLTransactionFeePrice: Equatable {
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    return lhs.speed == rhs.speed
   }
 }
